@@ -114,12 +114,11 @@ jobs:
         env:
           SHA: ${{ steps.get_tag.outputs.sha }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-          MINOR_VERSION: ${{ steps.get_version.outputs.minor }}
         run: |
-          # Tag Major version (ex. v1)
           git tag -f ${MAJOR_VERSION} ${SHA}
-          git push origin ${MAJOR_VERSION} --force
 
-          # # Tag Minor version (ex. v1.2)
-          # git tag -f ${MINOR_VERSION} ${SHA}
-          # git push origin ${MINOR_VERSION} --force
+      - name: Tag new versions
+        env:
+          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+        run: |
+          git push origin ${MAJOR_VERSION} --force
