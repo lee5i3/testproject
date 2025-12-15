@@ -106,7 +106,7 @@ jobs:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Tag new version
-        uses: erodozer/github-tag-action@main
+        uses: erodozer/github-tag-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.get_version.outputs.major }}
