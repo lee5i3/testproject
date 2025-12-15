@@ -10,7 +10,7 @@ on:
     inputs:
       target:
         type: string
-        description: "The git reference to use as the target (ex. <sha> or v1.2.3)"
+        description: "The git reference to use as the target (ex. v1.2.3)"
         required: false
 
 concurrency:
@@ -99,3 +99,12 @@ jobs:
           echo "Minor: $MINOR"
           echo "Sha: $SHA"
           echo "Version: $VERSION"
+
+      # https://github.com/anothrNick/github-tag-action
+      - name: Create and push major tag
+        id: tag
+        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297 # v1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          CUSTOM_TAG: ${{ steps.get_version.outputs.major }}
+          DEFAULT_BRANCH: ${{ steps.get_tag.outputs.sha }}
