@@ -92,6 +92,10 @@ jobs:
         env:
           MAJOR: ${{ steps.get_version.outputs.major }}
           MINOR: ${{ steps.get_version.outputs.minor }}
+          SHA: ${{ steps.get_tag.outputs.sha }}
+          VERSION: ${{ steps.get_tag.outputs.tag }}
         run: |
           echo "Major: $MAJOR"
           echo "Minor: $MINOR"
+          echo "Sha: $SHA"
+          echo "Version: $VERSION"
