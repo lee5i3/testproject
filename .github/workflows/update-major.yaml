@@ -100,42 +100,18 @@ jobs:
           echo "Sha: $SHA"
           echo "Version: $VERSION"
 
-      # https://github.com/actions/github-script
-      - name: Create tags
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
-        env:
-          MAJOR: ${{ steps.get_version.outputs.major }}
-          MINOR: ${{ steps.get_version.outputs.minor }}
-          SHA: ${{ steps.get_tag.outputs.sha }}
+      - name: Create a new major tag
+        uses: rickstaa/action-create-tag@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const sha = process.env.SHA;
+          tag: ${{ steps.get_version.outputs.major }}
+          force_push_tag: true
+          commit_sha: ${{ steps.get_tag.outputs.sha }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-            const majorRef = 'refs/tags/' + process.env.MAJOR;
-            const minorRef = 'refs/tags/' + process.env.MINOR;
-
-            async function deleteRef(ref) {
-              try {
-                await github.rest.git.getRef({ owner, repo, ref });
-                await github.rest.git.deleteRef({ owner, repo, ref });
-                core.info(`Deleted ref '${ref}'`);
-              } catch (e) {
-                if (e.status === 404) {
-                  core.info(`Ref '${ref}' does not exist (ok)`);
-                  return
-                }
-                throw e;
-              }
-            }
-
-            async function createRef(ref) {
-              await deleteRef(ref);
-              await github.rest.git.createRef({ owner, repo, ref, sha });
-              core.info(`Created ref '${ref}' -> ${sha}`);
-            }
-
-            await createRef(majorRef);
-            await createRef(minorRef);
+      - name: Create a new minor tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ steps.get_version.outputs.minor }}
+          force_push_tag: true
+          commit_sha: ${{ steps.get_tag.outputs.sha }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
