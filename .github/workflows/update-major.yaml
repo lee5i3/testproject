@@ -37,7 +37,7 @@ jobs:
 
     steps:
       # https://github.com/actions/checkout
-      - name: Checkout repo
+      - name: Checkout repo and get all tags
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
@@ -99,26 +99,26 @@ jobs:
           echo "Version: $VERSION"
 
       # https://github.com/actions/checkout
-      - name: Checkout repo
+      - name: Checkout repo by SHA
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: ${{ steps.get_tag.outputs.sha }}
 
-      # - name: Git config
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # - name: Tag new versions
-      #   env:
-      #     SHA: ${{ steps.get_tag.outputs.sha }}
-      #     MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-      #     MINOR_VERSION: ${{ steps.get_version.outputs.minor }}
-      #   run: |
-      #     # Tag Major version (ex. v1)
-      #     git tag -f ${MAJOR_VERSION} ${SHA}
-      #     git push origin ${MAJOR_VERSION} --force
+      - name: Tag new versions
+        env:
+          SHA: ${{ steps.get_tag.outputs.sha }}
+          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+          MINOR_VERSION: ${{ steps.get_version.outputs.minor }}
+        run: |
+          # Tag Major version (ex. v1)
+          git tag -f ${MAJOR_VERSION} ${SHA}
+          git push origin ${MAJOR_VERSION} --force
 
-      #     # # Tag Minor version (ex. v1.2)
-      #     # git tag -f ${MINOR_VERSION} ${SHA}
-      #     # git push origin ${MINOR_VERSION} --force
+          # # Tag Minor version (ex. v1.2)
+          # git tag -f ${MINOR_VERSION} ${SHA}
+          # git push origin ${MINOR_VERSION} --force
