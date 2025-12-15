@@ -115,10 +115,12 @@ jobs:
           SHA: ${{ steps.get_tag.outputs.sha }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
         run: |
+          echo "git tag -f ${MAJOR_VERSION} ${SHA}"
           git tag -f ${MAJOR_VERSION} ${SHA}
 
       - name: Tag new versions
         env:
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
         run: |
+          echo "git push origin ${MAJOR_VERSION} --force"
           git push origin ${MAJOR_VERSION} --force
