@@ -1,0 +1,29 @@
+name: Create new release draft
+
+on:
+  # Trigger when main has changes
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-create-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  push:
+    name: Create a new release
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # https://github.com/release-drafter/release-drafter
+      - uses: release-drafter/release-drafter@b1476f6e6eb133afa41ed8589daba6dc69b4d3f5 # v6.1.0
+        with:
+          commitish: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
