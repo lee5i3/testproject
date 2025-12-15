@@ -105,24 +105,31 @@ jobs:
           ref: ${{ steps.get_tag.outputs.sha }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-      - name: Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Tag new version
+        uses: erodozer/github-tag-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.get_version.outputs.major }}
+          force_update: true
 
-      - name: Create new tag
-        env:
-          TARGET: ${{ steps.get_tag.outputs.tag }}
-          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
-          git tag -f ${MAJOR_VERSION} ${TARGET}
+      # - name: Git config
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Push new tag
-        env:
-          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          echo "git push origin ${MAJOR_VERSION} --force"
-          git push origin ${MAJOR_VERSION} --force
+      # - name: Create new tag
+      #   env:
+      #     TARGET: ${{ steps.get_tag.outputs.tag }}
+      #     MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   run: |
+      #     echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
+      #     git tag -f ${MAJOR_VERSION} ${TARGET}
+
+      # - name: Push new tag
+      #   env:
+      #     MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   run: |
+      #     echo "git push origin ${MAJOR_VERSION} --force"
+      #     git push origin ${MAJOR_VERSION} --force
