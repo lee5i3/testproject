@@ -110,7 +110,7 @@ jobs:
           SHA: ${{ steps.get_tag.outputs.sha }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
           MINOR_VERSION: ${{ steps.get_version.outputs.minor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           # Tag Major version (ex. v1)
           git tag -f ${MAJOR_VERSION} ${SHA}
