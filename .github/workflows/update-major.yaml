@@ -98,13 +98,12 @@ jobs:
           echo "Sha: $SHA"
           echo "Version: $VERSION"
 
-      - name: Tag new version
-        uses: erodozer/github-tag-action@master
+      - uses: rickstaa/action-create-tag@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.get_version.outputs.major }}
+          tag: ${{ steps.get_version.outputs.major }}
+          force_push_tag: true
           commit_sha: ${{ steps.get_tag.outputs.sha }}
-          force_update: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Git config
       #   run: |
