@@ -105,6 +105,6 @@ jobs:
         id: tag
         uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297 # v1.71.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CUSTOM_TAG: ${{ steps.get_version.outputs.major }}
           DEFAULT_BRANCH: ${{ steps.get_tag.outputs.sha }}
