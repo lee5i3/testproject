@@ -98,18 +98,12 @@ jobs:
           echo "Sha: $SHA"
           echo "Version: $VERSION"
 
-      # https://github.com/actions/checkout
-      - name: Checkout repo by SHA
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          ref: ${{ steps.get_tag.outputs.sha }}
-          token: ${{ secrets.WORKFLOW_TOKEN }}
-
       - name: Tag new version
         uses: erodozer/github-tag-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.get_version.outputs.major }}
+          commit_sha: ${{ steps.get_tag.outputs.sha }}
           force_update: true
 
       # - name: Git config
