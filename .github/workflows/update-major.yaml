@@ -125,6 +125,7 @@ jobs:
               } catch (e) {
                 if (e.status === 404) {
                   core.info(`Ref '${ref}' does not exist (ok)`);
+                  return
                 }
                 throw e;
               }
