@@ -112,12 +112,11 @@ jobs:
 
       - name: Tag new versions
         env:
-          SHA: ${{ steps.get_tag.outputs.sha }}
+          TARGET: ${{ steps.get_tag.outputs.tag }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
         run: |
-          echo "git tag -f ${MAJOR_VERSION} ${SHA}"
-          git tag -f ${MAJOR_VERSION} ${SHA}
-
+          echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
+          git tag -f ${MAJOR_VERSION} ${TARGET}
       - name: Tag new versions
         env:
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
