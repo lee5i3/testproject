@@ -101,8 +101,8 @@ jobs:
 
       - name: Git config
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Tag new versions
         env:
@@ -115,6 +115,6 @@ jobs:
           git tag -f ${MAJOR_VERSION} ${SHA}
           git push origin ${MAJOR_VERSION} --force
 
-          # Tag Minor version (ex. v1.2)
-          git tag -f ${MINOR_VERSION} ${SHA}
-          git push origin ${MINOR_VERSION} --force
+          # # Tag Minor version (ex. v1.2)
+          # git tag -f ${MINOR_VERSION} ${SHA}
+          # git push origin ${MINOR_VERSION} --force
