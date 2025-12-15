@@ -103,23 +103,26 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: ${{ steps.get_tag.outputs.sha }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Git config
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Tag new versions
+      - name: Create new tag
         env:
           TARGET: ${{ steps.get_tag.outputs.tag }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
           git tag -f ${MAJOR_VERSION} ${TARGET}
-      - name: Tag new versions
+
+      - name: Push new tag
         env:
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "git push origin ${MAJOR_VERSION} --force"
           git push origin ${MAJOR_VERSION} --force
