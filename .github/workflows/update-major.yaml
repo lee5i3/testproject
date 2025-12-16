@@ -41,7 +41,7 @@ jobs:
           TARGET: ${{ github.event.inputs.target }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          # Ensure target starts with v
+          # Ensure target starts with v if it has a value
           if [[ -n "${TARGET}" && ! "${TARGET}" =~ ^v ]]; then
               TARGET="v${TARGET}"
           fi
