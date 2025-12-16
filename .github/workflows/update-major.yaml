@@ -46,7 +46,7 @@ jobs:
         id: get_tag
         env:
           TARGET: ${{ env.GIT_TARGET }}
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
