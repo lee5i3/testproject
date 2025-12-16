@@ -110,17 +110,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Create new tag
-        env:
-          TARGET: ${{ steps.get_tag.outputs.tag }}
-          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-        run: |
-          echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
-          git tag -f ${MAJOR_VERSION} ${TARGET}
-
       - name: Push new tag
         env:
+          TAG: ${{ steps.get_tag.outputs.tag }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-        run: |
-          echo "git push origin ${MAJOR_VERSION} --force"
-          git push origin ${MAJOR_VERSION} --force
+        run: |          
+          git tag -f ${MAJOR_VERSION} ${TAG}
+          git push -f origin refs/tags/${MAJOR_VERSION}
