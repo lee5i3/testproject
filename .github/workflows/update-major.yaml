@@ -41,12 +41,13 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
 
       - name: Get tag
         id: get_tag
         env:
           TARGET: ${{ env.GIT_TARGET }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
@@ -97,13 +98,6 @@ jobs:
           echo "Minor: $MINOR"
           echo "Sha: $SHA"
           echo "Version: $VERSION"
-
-      # https://github.com/webfactory/ssh-agent
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          log-public-key: false
 
       - name: Git config
         run: |
