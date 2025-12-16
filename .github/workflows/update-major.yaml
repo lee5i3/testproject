@@ -67,7 +67,7 @@ jobs:
 
               echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
           else
-              echo "Error: The target input must be a valid release/tag name"
+              echo "Error: '${TARGET}' is not a valid release/tag name"
               exit 1
           fi
 
