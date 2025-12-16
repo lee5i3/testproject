@@ -46,7 +46,7 @@ jobs:
         id: get_tag
         env:
           TARGET: ${{ env.GIT_TARGET }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
@@ -98,31 +98,24 @@ jobs:
           echo "Sha: $SHA"
           echo "Version: $VERSION"
 
-      - uses: rickstaa/action-create-tag@v1
-        with:
-          tag: ${{ steps.get_version.outputs.major }}
-          force_push_tag: true
-          commit_sha: ${{ steps.get_tag.outputs.sha }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # - name: Git config
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Create new tag
+        env:
+          TARGET: ${{ steps.get_tag.outputs.tag }}
+          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
+          git tag -f ${MAJOR_VERSION} ${TARGET}
 
-      # - name: Create new tag
-      #   env:
-      #     TARGET: ${{ steps.get_tag.outputs.tag }}
-      #     MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   run: |
-      #     echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
-      #     git tag -f ${MAJOR_VERSION} ${TARGET}
-
-      # - name: Push new tag
-      #   env:
-      #     MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   run: |
-      #     echo "git push origin ${MAJOR_VERSION} --force"
-      #     git push origin ${MAJOR_VERSION} --force
+      - name: Push new tag
+        env:
+          MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "git push origin ${MAJOR_VERSION} --force"
+          git push origin ${MAJOR_VERSION} --force
