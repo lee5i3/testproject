@@ -98,6 +98,13 @@ jobs:
           echo "Sha: $SHA"
           echo "Version: $VERSION"
 
+      # https://github.com/webfactory/ssh-agent
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          log-public-key: false
+
       - name: Git config
         run: |
           git config user.name "github-actions[bot]"
@@ -107,7 +114,6 @@ jobs:
         env:
           TARGET: ${{ steps.get_tag.outputs.tag }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           echo "git tag -f ${MAJOR_VERSION} ${TARGET}"
           git tag -f ${MAJOR_VERSION} ${TARGET}
@@ -115,7 +121,6 @@ jobs:
       - name: Push new tag
         env:
           MAJOR_VERSION: ${{ steps.get_version.outputs.major }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           echo "git push origin ${MAJOR_VERSION} --force"
           git push origin ${MAJOR_VERSION} --force
