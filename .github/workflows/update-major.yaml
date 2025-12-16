@@ -41,6 +41,11 @@ jobs:
           TARGET: ${{ github.event.inputs.target }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
+          # Ensure target starts with v
+          if [[ -n "${TARGET}" && ! "${TARGET}" =~ ^v ]]; then
+              TARGET="v${TARGET}"
+          fi
+
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
               TAG=$(gh release view --json tagName | jq -r '.tagName')
