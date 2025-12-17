@@ -27,17 +27,12 @@ jobs:
     # Only run this job if the branch is main
     if: ${{ github.ref == 'refs/heads/main' }}
 
-    permissions:
-      contents: write
-      actions: write
-
     steps:
       # https://github.com/actions/checkout
       - name: Checkout repo
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get tag
         id: get_tag
@@ -74,21 +69,33 @@ jobs:
               exit 1
           fi
 
-      - name: Push new tag
+      - name: Parse versions
         env:
           TAG: ${{ steps.get_tag.outputs.tag }}
         run: |
-          major_version=$(echo "$TAG" | grep -oE '^v[0-9]+')
-          minor_version=$(echo "$TAG" | grep -oE '^[v0-9]+\.([0-9]+)')
+          major_version=$(echo "$TAG" | grep -oE '^v[0-9]+') >> $GITHUB_OUTPUT
+          minor_version=$(echo "$TAG" | grep -oE '^[v0-9]+\.([0-9]+)') >> $GITHUB_OUTPUT
 
+          echo "Major version: $major_version"
+          echo "Minor version: $minor_version"
+
+      - name: Git config
+        run: |
           # Setup git config
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Create tag for Major version
-          git tag -f ${major_version} ${TAG}
-          git push -f origin ${major_version}
-
+      - name: Tag new version
+        env:
+          TAG: ${{ steps.get_tag.outputs.tag }}
+          VERSION: ${{ steps.parse_versions.outputs.major_version }}
+        run: |
           # Create tag for Minor version
-          git tag -f ${minor_version} ${TAG}
-          git push -f origin ${minor_version}
+          git tag -f ${VERSION} ${TAG}
+
+      - name: Push new version
+        env:
+          VERSION: ${{ steps.parse_versions.outputs.major_version }}
+        run: |
+          # Create tag for Major version
+          git push -f origin ${VERSION}
