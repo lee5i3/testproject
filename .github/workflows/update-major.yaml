@@ -70,11 +70,12 @@ jobs:
           fi
 
       - name: Parse versions
+        id: parse_versions
         env:
-          TAG: ${{ steps.get_tag.outputs.tag }}
+          VERSION: ${{ steps.get_tag.outputs.tag }}
         run: |
-          echo "major_version=$(echo "$TAG" | grep -oE '^v[0-9]+')" >> $GITHUB_OUTPUT
-          echo "minor_version=$(echo "$TAG" | grep -oE '^[v0-9]+\.([0-9]+)')" >> $GITHUB_OUTPUT
+          echo "major=$(echo "$VERSION" | grep -oE '^v[0-9]+')" >> $GITHUB_OUTPUT
+          echo "minor=$(echo "$VERSION" | grep -oE '^[v0-9]+\.([0-9]+)')" >> $GITHUB_OUTPUT
 
       - name: Git config
         run: |
@@ -85,12 +86,12 @@ jobs:
       - name: Tag new version
         env:
           TAG: ${{ steps.get_tag.outputs.tag }}
-          MAJOR_VERSION: ${{ steps.parse_versions.outputs.major_version }}
+          MAJOR_VERSION: ${{ steps.parse_versions.outputs.major }}
         run: |
           git tag -f ${MAJOR_VERSION} ${TAG}
 
       - name: Push new version
         env:
-          MAJOR_VERSION: ${{ steps.parse_versions.outputs.major_version }}
+          MAJOR_VERSION: ${{ steps.parse_versions.outputs.major }}
         run: |
           git push -f origin ${MAJOR_VERSION}
