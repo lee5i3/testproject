@@ -27,6 +27,10 @@ jobs:
     # Only run this job if the branch is main
     if: ${{ github.ref == 'refs/heads/main' }}
 
+    permissions:
+      contents: write
+      actions: write
+
     steps:
       # https://github.com/actions/checkout
       - name: Checkout repo
