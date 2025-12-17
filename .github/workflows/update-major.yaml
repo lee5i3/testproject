@@ -27,20 +27,19 @@ jobs:
     # Only run this job if the branch is main
     if: ${{ github.ref == 'refs/heads/main' }}
 
-    permissions: write-all
-
     steps:
       # https://github.com/actions/checkout
       - name: Checkout repo
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
 
       - name: Get tag
         id: get_tag
         env:
           TARGET: ${{ github.event.inputs.target }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
