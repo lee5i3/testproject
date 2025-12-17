@@ -33,19 +33,14 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get tag
         id: get_tag
         env:
           TARGET: ${{ github.event.inputs.target }}
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Ensure target starts with v if it has a value
-          if [[ -n "${TARGET}" && ! "${TARGET}" =~ ^v ]]; then
-              TARGET="v${TARGET}"
-          fi
-
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
               TAG=$(gh release view --json tagName | jq -r '.tagName')
@@ -69,7 +64,6 @@ jobs:
               TAG=$(echo "${TAG_DETAILS}" | jq -r '.tagName')
               echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
               SHA="$(git rev-list -n 1 "${TAG}")"
-
               echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
           else
               echo "Error: '${TARGET}' is not a valid release/tag name"
