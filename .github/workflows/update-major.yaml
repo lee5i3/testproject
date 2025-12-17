@@ -94,4 +94,4 @@ jobs:
         env:
           MAJOR_VERSION: ${{ steps.parse_versions.outputs.major }}
         run: |
-          git push origin ${MAJOR_VERSION}
+          git push origin ${MAJOR_VERSION} --force
