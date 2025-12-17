@@ -33,13 +33,13 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Get tag
         id: get_tag
         env:
           TARGET: ${{ github.event.inputs.target }}
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           if [[ -z "${TARGET}" ]]; then
               echo "Looking up latest published GitHub release..."
