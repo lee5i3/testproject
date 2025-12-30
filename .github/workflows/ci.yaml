@@ -18,14 +18,36 @@ jobs:
         run: |
           echo "Run tests on : ${{ github.ref_name }}"
 
-      - name: Get release
-        id: get_release
-        uses: agners/get-draft-release@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      - name: Get draft release details
+        uses: actions/github-script@v6
+        id: get-release # ID to reference the output later        
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const { owner, repo } = context.repo;
+            const tag_name = '${{ inputs.tag_name }}';
+            
+            // List all releases
+            const releases = await github.rest.repos.listReleases({
+              owner,
+              repo,
+            });
+            
+            // Find the specific draft release by tag_name
+            const draftRelease = releases.data.find(r => r.tag_name === tag_name && r.draft);
+            
+            if (draftRelease) {
+              console.log(`Found draft release with ID: ${draftRelease.id}`);
+              // Set outputs for subsequent steps
+              core.setOutput('upload_url', draftRelease.upload_url);
+              core.setOutput('release_id', draftRelease.id);
+            } else {
+              core.setFailed(`Draft release with tag ${tag_name} not found.`);
+            }
+          result-encoding: json
 
       - uses: eregon/publish-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
-          release_id: ${{ steps.get_release.outputs.id }}
+          release_id: ${{ steps.get-release.outputs.release_id }}
