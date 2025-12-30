@@ -18,20 +18,16 @@ jobs:
         run: |
           echo "Run tests"
 
-      
       - name: Trigger repository_dispatch
         uses: actions/github-script@v7
-        env:
-          GITHUB_OWNER: ${{ github.repository_owner }}
-          GITHUB_REPO: ${{ github.event.repository.name }}
         with:
           github-token: ${{ secrets.GH_PAT }}
           script: |
             const version = '1.0.0'
 
             await github.rest.repos.createDispatchEvent({
-              owner: ${process.env.GITHUB_OWNER},
-              repo: ${process.env.GITHUB_REPO},
+              owner: ${{ github.repository_owner }},
+              repo: ${{ github.repository.name }},
               event_type: 'create-release',
               client_payload: {
                 version: version,
