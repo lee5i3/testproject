@@ -24,10 +24,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
-      # https://github.com/anothrNick/github-tag-action
-      - name: Bump version and push tag
-        id: tag
-        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297 # v1.71.0
+      - name: Tag minor version
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          CUSTOM_TAG: ${{ steps.release.outputs.tag_name }}
+          TAG: ${{ steps.release.outputs.tag_name }}
+        run: |
+          git tag -f ${TAG}
+          git push -f origin ${TAG}
