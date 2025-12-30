@@ -18,10 +18,9 @@ jobs:
         run: |
           echo "Run tests on : ${{ github.ref_name }}"
 
-      - uses: joutvhu/get-release@v1
+      - name: Get release
         id: get_release
-        with:
-          tag_name: ${{ github.ref_name }}
+        uses: agners/get-draft-release@v0.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
