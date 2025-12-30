@@ -18,24 +18,13 @@ jobs:
         run: |
           echo "Run tests on : ${{ github.ref_name }}"
 
-      - name: Publish existing draft release by tag
-        uses: actions/github-script@v7
-        env:
-          RELEASE_VERSION: ${{ github.ref_name }}
+      - uses: joutvhu/get-release@v1
+        id: get_release
         with:
-          github-token: ${{ secrets.GH_PAT }}
-          script: |
-            const {owner, repo} = context.repo;
-            const tag = process.env.RELEASE_VERSION;
+          tag_name: ${{ github.ref_name }}
 
-            const release = await github.rest.repos.getReleaseByTag({
-              owner, repo, tag,
-            });
-
-            const updated = await github.rest.repos.updateRelease({
-              owner, repo,
-              release_id: release.data.id,
-              draft: false, // this publishes it
-            });
-
-            core.info(`Published: ${updated.data.html_url}`);
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        with:
+          release_id: ${{ steps.get_release.outputs.id }}
