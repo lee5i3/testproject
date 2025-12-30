@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v*
 
   pull_request:
     branches:
@@ -16,20 +16,26 @@ jobs:
     steps:
       - name: Run tests
         run: |
-          echo "Run tests"
+          echo "Run tests on : ${{ github.ref_name }}"
 
-      - name: Trigger repository_dispatch
+      - name: Publish existing draft release by tag
         uses: actions/github-script@v7
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
         with:
           github-token: ${{ secrets.GH_PAT }}
           script: |
-            const version = '1.0.0'
-            await github.rest.repos.createDispatchEvent({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              event_type: 'create-release',
-              client_payload: {
-                version: version,
-                source: context.repo.full_name
-              }
+            const {owner, repo} = context.repo;
+            const tag = process.env.RELEASE_VERSION;
+
+            const release = await github.rest.repos.getReleaseByTag({
+              owner, repo, tag,
             });
+
+            const updated = await github.rest.repos.updateRelease({
+              owner, repo,
+              release_id: release.data.id,
+              draft: false, // this publishes it
+            });
+
+            core.info(`Published: ${updated.data.html_url}`);
