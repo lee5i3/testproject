@@ -22,6 +22,8 @@ jobs:
         id: get_release
         with:
           tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - uses: eregon/publish-release@v1
         env:
