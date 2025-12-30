@@ -1,7 +1,8 @@
 name: Create release
 
 on:
-  release:
+  repository_dispatch:
+    types: [create-release]
 
 jobs:
   create-release:
@@ -10,4 +11,4 @@ jobs:
     steps:
       - name: Create release
         run: |
-          echo "Creating release for version ${{ github.event.release.tag_name }}"
+          echo "Creating release for version ${{ github.event.client_payload.version }}"

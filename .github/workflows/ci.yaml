@@ -18,10 +18,26 @@ jobs:
         run: |
           echo "Run tests"
 
-      # https://github.com/release-drafter/release-drafter
-      - uses: release-drafter/release-drafter@b1476f6e6eb133afa41ed8589daba6dc69b4d3f5 # v6.1.0
-        with:
-          commitish: main
+      
+      - name: Trigger repository_dispatch
+        uses: actions/github-script@v7
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const version = '1.0.0'
+
+            await github.rest.repos.createDispatchEvent({
+              owner: ${process.env.GITHUB_OWNER},
+              repo: ${process.env.GITHUB_REPO},
+              event_type: 'create-release',
+              client_payload: {
+                version: version,
+                source_repo: context.repo.repo,
+                source_owner: context.repo.owner,
+                ref: context.ref,
+                sha: context.sha
+              }
+            })
