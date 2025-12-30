@@ -24,16 +24,12 @@ jobs:
           github-token: ${{ secrets.GH_PAT }}
           script: |
             const version = '1.0.0'
-
             await github.rest.repos.createDispatchEvent({
-              owner: ${{ github.repository_owner }},
-              repo: ${{ github.repository.name }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               event_type: 'create-release',
               client_payload: {
                 version: version,
-                source_repo: context.repo.repo,
-                source_owner: context.repo.owner,
-                ref: context.ref,
-                sha: context.sha
+                source: context.repo.full_name
               }
-            })
+            });
