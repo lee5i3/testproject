@@ -1,32 +1,34 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches:
-      - main
-
   pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  step1:
+  build:
+    name: Build Application
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
-      - name: Debug
-        run: echo "Hello Step1"
+      - run: echo "Running build job"
 
-  step2:
+  tests:
+    name: Run Unit Tests
+    if: ${{ vars.NODEJS_TESTS_ENABLED != 'false' }}
     runs-on: ubuntu-latest
-    needs: step1
     steps:
-      - name: Debug
-        run: echo "Hello Step2"
+      - run: echo "Running unit tests"
 
-  step3:
+  release:
+    needs: 
+      - tests
+      - build
+    name: Release to staging
+    if: |
+      always() && 
+      (needs.tests.result == 'skipped' || needs.tests.result == 'success') &&
+      (needs.build.result == 'skipped' || needs.build.result == 'success')
     runs-on: ubuntu-latest
-    needs: step2
+
     steps:
-      - name: Debug
-        run: echo "Hello Step3"
+      - run: echo "Deploying to staging"
