@@ -4,31 +4,20 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      image-tag:
+        description: 'Tag to use for the Docker image'
+        required: false
+        default: 'v1.0.0'
 
 jobs:
-  build:
+  tag:
     name: Build Application
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Running build job"
-
-  tests:
-    name: Run Unit Tests
-    if: ${{ vars.NODEJS_TESTS_ENABLED != 'false' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Running unit tests"
-
-  release:
-    needs: 
-      - tests
-      - build
-    name: Release to staging
-    if: |
-      always() && 
-      (needs.tests.result == 'skipped' || needs.tests.result == 'success') &&
-      (needs.build.result == 'skipped' || needs.build.result == 'success')
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo "Deploying to staging"
+      - name: Tag build
+        env:
+          # IMAGE_TAG: ${{ replace(inputs.image-tag, 'v', '') }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+        run: |
+          echo "tagging with $IMAGE_TAG"
