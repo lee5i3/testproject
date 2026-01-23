@@ -25,4 +25,4 @@ jobs:
         env:
           BUILD_TAG: ${{ steps.build.outputs.tag }}
         run: |
-          echo "Creating package ${BUILD_TAG}..."
+          echo "Creating package tag: ${BUILD_TAG}..."
