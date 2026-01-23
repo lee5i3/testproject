@@ -26,4 +26,9 @@ jobs:
         env:
           BUILD_TAG: ${{ steps.build.outputs.tag }}
         run: |
+          if [ -z "${BUILD_TAG}" ]; then
+            echo "No build tag found. Skipping package creation."
+            exit 0
+          fi
+          
           echo "Creating package tag: ${BUILD_TAG}..."
