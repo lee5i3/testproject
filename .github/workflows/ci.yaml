@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Tag build
         id: build
+        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "Building application..."
           echo "tag=v1.0.0" >> $GITHUB_OUTPUT
