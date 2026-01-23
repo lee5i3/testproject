@@ -16,8 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Tag build
-        env:
-          IMAGE_TAG: ${{ replace(inputs.image-tag, 'v', '') }}
-          # IMAGE_TAG: ${{ inputs.image-tag }}
+        id: build
         run: |
-          echo "tagging with $IMAGE_TAG"
+          echo "Building application..."
+          echo "tag=v1.0.0" >> $GITHUB_OUTPUT
+
+      - name: Create package
+        env:
+          BUILD_TAG: ${{ steps.build.outputs.tag }}
+        run: |
+          echo "Creating package ${BUILD_TAG}..."
