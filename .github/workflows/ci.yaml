@@ -28,9 +28,9 @@ jobs:
     needs: parallel
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        chart: ${{ needs.parallel.outputs.* }}
+    # strategy:
+    #   matrix:
+    #     chart: ${{ needs.parallel.outputs.* }}
 
     steps:
       - name: checkout
