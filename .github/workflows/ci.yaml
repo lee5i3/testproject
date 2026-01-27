@@ -1,34 +1,40 @@
-name: CI Pipeline
-
+name: Works
 on:
   push:
-  pull_request:
-  workflow_dispatch:
-    inputs:
-      image-tag:
-        description: 'Tag to use for the Docker image'
-        required: false
-        default: 'v1.0.0'
+    branches: ["**"]
 
 jobs:
-  tag:
-    name: Build Application
+  parallel:
     runs-on: ubuntu-latest
-    steps:
-      - name: Tag build
-        id: build
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "Building application..."
-          echo "tag=v1.0.0" >> $GITHUB_OUTPUT
+    strategy:
+      fail-fast: true
+      matrix:
+        chart:
+          - common
+          - transitions
 
-      - name: Create package
-        env:
-          BUILD_TAG: ${{ steps.build.outputs.tag }}
+    steps:
+      - name: output
+        id: output
         run: |
-          if [ -z "${BUILD_TAG}" ]; then
-            echo "No build tag found. Skipping package creation."
-            exit 0
-          fi
-          
-          echo "Creating package tag: ${BUILD_TAG}..."
+          echo "version=1.0.0" >> $GITHUB_OUTPUT
+          echo "name=${{ matrix.chart }}" >> $GITHUB_OUTPUT
+
+    outputs:
+      version: ${{ steps.output.outputs.version }}
+      name: ${{ steps.output.outputs.name }}
+
+  finally:
+    needs: parallel
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        chart: ${{ needs.parallel.outputs.* }}
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: debug
+        run: echo '${{ toJSON(needs.parallel.outputs) }}'
