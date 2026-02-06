@@ -1,40 +1,29 @@
 name: Deploy
 
 on:
-  push:
-    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        default: 'QA'
+        type: choice
+        options:
+          - QA
+          - Demo
+          - Live
   
 jobs:
-  deploy-qa:
+  deploy:
     name: Deploy
 
     runs-on: ubuntu-latest
 
-    environment: QA
+    environment: ${{ inputs.environment || 'QA' }}    
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy step
-        run: echo "Deploying QA..."
-
-  deploy:
-    name: Deploy to ${{ matrix.environment }}
-
-    runs-on: ubuntu-latest
-
-    environment: ${{ matrix.environment }}
-
-    needs: [deploy-qa]
-
-    strategy:
-      matrix:
-        environment: [Demo, Live] 
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy step
-        run: echo "Deploying ${{ matrix.environment }}..."
+        run: echo "Deploying ${{ github.environment }}..."
