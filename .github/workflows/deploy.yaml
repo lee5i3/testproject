@@ -4,29 +4,24 @@ on:
   push:
     branches: ["main"]
   
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'The environment to deploy to'
-        required: true
-        default: 'Dev'
-        type: choice
-        options:
-          - Dev
-          - QA
-          - Live
-
 jobs:
   deploy:
     name: Deploy
 
     runs-on: ubuntu-latest
 
-    environment: ${{ inputs.environment }}
+    environment: ${{ matrix.environment }}
+
+    strategy:
+      matrix:
+        environment: 
+          - Dev
+          - QA
+          - Live
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy step
-        run: echo "Deploying ${{ inputs.environment }}..."
+        run: echo "Deploying ${{ matrix.environment }}..."
