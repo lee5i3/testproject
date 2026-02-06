@@ -3,6 +3,18 @@ name: Deploy
 on:
   push:
     branches: ["main"]
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        default: 'Dev'
+        type: choice
+        options:
+          - Dev
+          - QA
+          - Live
 
 jobs:
   deploy:
@@ -10,7 +22,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment: Dev
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Checkout code
