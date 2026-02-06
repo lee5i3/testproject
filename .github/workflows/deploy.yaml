@@ -19,24 +19,8 @@ jobs:
       - name: Deploy step
         run: echo "Deploying QA..."
 
-  deploy-demo:
-    name: Deploy
-
-    runs-on: ubuntu-latest
-
-    environment: Demo
-
-    needs: [deploy-qa]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy step
-        run: echo "Deploying Demo..."
-
-  deploy-live:
-    name: Deploy
+  deploy:
+    name: Deploy to ${{ matrix.environment }}
 
     runs-on: ubuntu-latest
 
@@ -44,9 +28,13 @@ jobs:
 
     needs: [deploy-qa]
 
+    strategy:
+      matrix:
+        environment: [Demo, Live] 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy step
-        run: echo "Deploying Live..."
+        run: echo "Deploying ${{ matrix.environment }}..."
