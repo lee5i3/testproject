@@ -24,7 +24,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment: Live
+    environment: ${{ matrix.environment }}
 
     needs: [deploy-qa]
 
