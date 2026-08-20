@@ -1,0 +1,51 @@
+---
+name: Build and Register AMI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+# One run at a time per ref. cancel-in-progress is deliberately false: cancelling
+# a packer build kills the runner without giving packer time to terminate its EC2
+# build instance, orphaning a t3.medium plus its temporary security group and key
+# pair. A queued run is cheaper than a leaked instance.
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    name: Lint
+    # workflow_dispatch can be launched from any ref, so restrict it to main.
+    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - run: 
+          echo "Linting Packer templates"
+
+  build:
+    name: Build AMI
+    needs: [lint]
+    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - run: |
+          echo ref=${{ github.ref }}
+          echo head_ref=${{ github.head_ref }}
