@@ -20,6 +20,9 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: false
 
+env:
+  SKIP_CREATE_AMI: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+
 jobs:
   lint:
     name: Lint
@@ -48,3 +51,6 @@ jobs:
       - run: |
           echo ref=${{ github.ref }}
           echo head_ref=${{ github.head_ref }}
+
+          echo "Building AMI with Packer"
+          echo "SKIP_CREATE_AMI=${{ env.SKIP_CREATE_AMI }}"
