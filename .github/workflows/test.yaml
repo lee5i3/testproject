@@ -1,8 +1,8 @@
 name: Test Permissions
 
 on:
-  # Run on main to catch any issues introduced after merge
-  push:
+  # # Run on main to catch any issues introduced after merge
+  # push:
 
   # Run on pull requests to main to catch any issues before merge
   pull_request:
