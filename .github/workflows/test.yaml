@@ -23,3 +23,13 @@ jobs:
           echo "Permissions for GITHUB_TOKEN:"
           echo "  contents: ${{ github.token.permissions }}"          
 
+  test-permissions-contents:
+    name: Test Permissions for Contents
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check permissions
+        run: |
+          echo "Permissions for GITHUB_TOKEN:"
+          echo "  contents: ${{ github.token.permissions }}"
