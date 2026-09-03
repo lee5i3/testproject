@@ -13,6 +13,20 @@ permissions:
   contents: read
 
 jobs:
+  pat:
+    name: Test Permissions for PAT
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check permissions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
+
+      - name: Curl Scopes
+        run: |
+          curl -sS -f -I -H "Authorization: token ${{ secrets.GH_PAT }}" https://api.github.com | grep -i x-oauth-scopes
+
   test-permissions:
     name: Test Permissions
     runs-on: ubuntu-latest
