@@ -9,6 +9,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: none
+
 jobs:
   work:
     uses: lee5i3/testproject/.github/workflows/workflow.yaml@DOPS-0000
