@@ -29,8 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh search prs --owner lee5i3
-
+          gh repo create lee5i3/new-service --private --add-readme
 
   test-permissions:
     name: Test Permissions
