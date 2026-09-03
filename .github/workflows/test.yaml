@@ -23,9 +23,10 @@ jobs:
         run: |
           GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
 
-      - name: Curl Scopes
+      - name: Permission test
         run: |
-          curl -sS -f -I -H "Authorization: token ${{ secrets.GH_PAT }}" https://api.github.com | grep -i x-oauth-scopes
+          gh search prs --owner lee5i3
+
 
   test-permissions:
     name: Test Permissions
