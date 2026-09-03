@@ -3,7 +3,6 @@ name: Test Permissions
 on:
   # Run on main to catch any issues introduced after merge
   push:
-    branches: [main]
 
   # Run on pull requests to main to catch any issues before merge
   pull_request:
@@ -18,4 +17,4 @@ jobs:
       - name: Check permissions
         run: |
           echo "Permissions for GITHUB_TOKEN:"
-          
+
