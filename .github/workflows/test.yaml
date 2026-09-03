@@ -9,6 +9,9 @@ on:
 
   workflow_dispatch:
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   test-permissions:
     name: Test Permissions
@@ -17,4 +20,5 @@ jobs:
       - name: Check permissions
         run: |
           echo "Permissions for GITHUB_TOKEN:"
+          echo "  contents: ${{ github.token.permissions.contents }}"
 
