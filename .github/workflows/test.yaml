@@ -27,6 +27,8 @@ jobs:
           GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
 
       - name: Permission test
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh search prs --owner lee5i3
 
