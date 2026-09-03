@@ -9,52 +9,6 @@ on:
 
   workflow_dispatch:
 
-permissions:
-  contents: none
-
 jobs:
   work:
     uses: lee5i3/testproject/.github/workflows/workflow.yaml@DOPS-0000
-    permissions:
-      contents: read
-
-  pat:
-    name: Test Permissions for PAT
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Check permissions
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
-
-      # - name: Permission test
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GH_PAT }}
-      #   run: |
-      #     gh repo create lee5i3/new-service --private --add-readme
-
-  test-permissions:
-    name: Test Permissions
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Check permissions
-        run: |
-          echo "Permissions for GITHUB_TOKEN:"
-          echo "  contents: ${{ github.token.permissions }}"          
-
-  test-permissions-contents:
-    name: Test Permissions for Contents
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Check permissions
-        run: |
-          echo "Permissions for GITHUB_TOKEN:"
-          echo "  contents: ${{ github.token.permissions }}"
