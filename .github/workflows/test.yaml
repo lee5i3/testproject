@@ -39,6 +39,8 @@ jobs:
   test-permissions:
     name: Test Permissions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check permissions
         run: |
