@@ -16,6 +16,9 @@ jobs:
   pat:
     name: Test Permissions for PAT
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Check permissions
         env:
