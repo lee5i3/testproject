@@ -18,7 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check permissions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Permissions for GITHUB_TOKEN:"
-          echo "  contents: ${{ github.token.permissions.contents }}"
+          echo "  contents: ${{ github.token.permissions.contents }}"          
+          curl -sS -f -I -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com | grep ^x-oauth-scopes: | cut -d' ' -f2- | tr -d "[:space:]" | tr ',' '\n'
 
