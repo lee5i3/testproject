@@ -1,0 +1,29 @@
+name: Test reusable workflow
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  pat:
+    name: Test Permissions for PAT
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check permissions
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+        run: |
+          GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
+
+      - name: Permission test
+        env:
+          GH_TOKEN: ${{ secrets.github-token }}
+        run: |
+          gh repo create lee5i3/new-service-${{ github.run_id }} --private --add-readme

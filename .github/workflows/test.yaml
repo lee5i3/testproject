@@ -13,6 +13,11 @@ permissions:
   contents: read
 
 jobs:
+  work:
+    uses: lee5i3/testproject/.github/workflows/workflow.yaml@DOPS-0000
+    permissions:
+      contents: read
+
   pat:
     name: Test Permissions for PAT
     runs-on: ubuntu-latest
@@ -25,11 +30,11 @@ jobs:
         run: |
           GITHUB_TOKEN=${GITHUB_TOKEN} gh auth status
 
-      - name: Permission test
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          gh repo create lee5i3/new-service --private --add-readme
+      # - name: Permission test
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_PAT }}
+      #   run: |
+      #     gh repo create lee5i3/new-service --private --add-readme
 
   test-permissions:
     name: Test Permissions
