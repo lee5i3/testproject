@@ -47,13 +47,21 @@ jobs:
     name: Build Docker
     needs: [create-release]
 
+    # create-release only runs on the default branch, and a skipped need skips
+    # this job too unless it opts in. Run whenever nothing upstream failed.
+    if: ${{ !failure() && !cancelled() }}
+
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       id-token: write
 
+    env:
+      # A PR has no release, so it builds under a prerelease version instead
+      VERSION: ${{ needs.create-release.outputs.version || format('0.0.0-pr.{0}', github.event.pull_request.number) }}
+
     steps:
       - name: Build docker image
         run: |
-          echo "Building Docker image: ${{ needs.create-release.outputs.version }}"
+          echo "Building Docker image: $VERSION"
