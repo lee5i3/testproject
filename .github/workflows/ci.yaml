@@ -59,7 +59,7 @@ jobs:
 
     env:
       # A PR has no release, so it builds under a prerelease version instead
-      VERSION: ${{ needs.create-release.outputs.version || format('0.0.0-pr.{0}', github.event.pull_request.number) }}
+      VERSION: ${{ needs.create-release.outputs.version || github.event.pull_request.head.ref }}
 
     steps:
       - name: Build docker image
