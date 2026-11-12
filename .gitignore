@@ -1,0 +1,6 @@
+# Build output from `go build -o bin/ ./cmd/...`
+/bin/
+
+# Test and coverage output
+*.test
+*.out
