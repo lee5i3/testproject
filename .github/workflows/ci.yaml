@@ -50,6 +50,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      GO111MODULE: on
+
     steps:
       # https://github.com/actions/checkout
       - name: Checkout repo
