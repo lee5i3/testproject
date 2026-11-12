@@ -52,6 +52,7 @@ jobs:
 
     env:
       GO111MODULE: on
+      GOSECGOVERSION: "go1.27.4"
 
     steps:
       # https://github.com/actions/checkout
