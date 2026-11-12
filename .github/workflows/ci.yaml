@@ -21,8 +21,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  security:
-    name: Security Checks
+  security-run:
+    name: Security Checks (Run)
 
     runs-on: ubuntu-latest
 
@@ -44,3 +44,27 @@ jobs:
         run: |
           go install github.com/securego/gosec/v2/cmd/gosec@master
           gosec -stdout ./...
+
+  security-docker:
+    name: Security Checks (Docker)
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # https://github.com/actions/setup-go
+      - name: Setup Golang
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: 'go.mod'
+
+      # https://github.com/securego/gosec
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@5eb1d104ef85ff2c905c877eb600e8c1dee33a22 # v2.30.0
+        with:
+          args: ./...
