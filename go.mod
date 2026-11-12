@@ -1,3 +1,3 @@
 module github.com/lee5i3/testproject
 
-go 1.27.0
+go 1.27.4
